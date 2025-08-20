@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
+import 'community_page.dart';
+import 'products_page.dart';
+import 'services_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Miner Community App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
+      title: 'YoMinero App',
+      home: const MainApp(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<MainApp> createState() => _MainAppState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MainAppState extends State<MainApp> {
   int _selectedIndex = 0;
-
-  static List<Widget> _pages = <Widget>[
+  final List<Widget> _pages = [
     CommunityPage(),
     ProductsPage(),
     ServicesPage(),
@@ -42,7 +45,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.group),
             label: 'Comunidad',
@@ -59,54 +62,6 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
         onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class CommunityPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Comunidad'),
-      ),
-      body: Center(
-        child: Text('Página de comunidad'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navegar a la pantalla de creación de publicación
-        },
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-class ProductsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Productos'),
-      ),
-      body: Center(
-        child: Text('Página de productos'),
-      ),
-    );
-  }
-}
-
-class ServicesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Servicios'),
-      ),
-      body: Center(
-        child: Text('Página de servicios'),
       ),
     );
   }
