@@ -1,87 +1,56 @@
 import 'package:flutter/material.dart';
+import 'models/service.dart';
+import 'service_detail_page.dart';
 
-class ServicesPage extends StatefulWidget {
-  const ServicesPage({Key? key}) : super(key: key);
-
-  @override
-  _ServicesPageState createState() => _ServicesPageState();
-}
-
-class _ServicesPageState extends State<ServicesPage> {
-  final List<Map<String, dynamic>> _services = [
-    {
-      'title': 'Topograf\u00eda y mapeo',
-      'description': 'Servicio de topograf\u00eda para estudios y planificaci\u00f3n.',
-      'requested': false,
-    },
-    {
-      'title': 'Mantenimiento de maquinaria',
-      'description': 'Revisi\u00f3n y reparaci\u00f3n de equipos pesados de miner\u00eda.',
-      'requested': false,
-    },
-    {
-      'title': 'Asesor\u00eda legal minera',
-      'description': 'Consultor\u00eda en normas y licencias de miner\u00eda.',
-      'requested': false,
-    },
-  ];
-
-  void _toggleRequest(int index) {
-    setState(() {
-      _services[index]['requested'] = !_services[index]['requested'];
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(_services[index]['requested']
-            ? 'Solicitud enviada'
-            : 'Solicitud cancelada'),
-        duration: const Duration(seconds: 1),
-      ),
-    );
-  }
+/// Displays a list of available services and allows users to view
+/// details about each service. In this simplified version the
+/// services are hard-coded but in a complete application they
+/// would be fetched from a database or API.
+class ServicesPage extends StatelessWidget {
+  const ServicesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Servicios'),
+    final List<Service> services = [
+      Service(
+        id: 's1',
+        name: 'Topografía y mapeo',
+        description:
+            'Servicio de topografía y mapeo para estudios y planificación.',
+        rate: 120.0,
       ),
+      Service(
+        id: 's2',
+        name: 'Mantenimiento de maquinaria',
+        description:
+            'Revisión y reparación de equipos pesados de minería.',
+        rate: 200.0,
+      ),
+      Service(
+        id: 's3',
+        name: 'Asesoría legal minera',
+        description: 'Consultoría en normas y licencias de minería.',
+        rate: 150.0,
+      ),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Servicios')),
       body: ListView.builder(
-        itemCount: _services.length,
+        itemCount: services.length,
         itemBuilder: (context, index) {
-          final service = _services[index];
-          return Card(
-            margin: const EdgeInsets.all(8.0),
-            elevation: 2.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    service['title'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(service['description']),
-                  const SizedBox(height: 8.0),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () => _toggleRequest(index),
-                      child: Text(service['requested'] ? 'Cancelar' : 'Solicitar'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          final service = services[index];
+          return ListTile(
+            title: Text(service.name),
+            subtitle: Text(service.description),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ServiceDetailPage(service: service),
+                ),
+              );
+            },
           );
         },
       ),

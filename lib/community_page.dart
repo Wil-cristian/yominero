@@ -1,100 +1,85 @@
 import 'package:flutter/material.dart';
+import 'models/post.dart';
+import 'post_detail_page.dart';
 
+/// A community feed page that displays a list of posts. Users can
+/// tap on a post to view its details or press the like button to
+/// increment the like count. The posts are stored locally in this
+/// stateful widget for demonstration purposes.
 class CommunityPage extends StatefulWidget {
-  const CommunityPage({Key? key}) : super(key: key);
+  const CommunityPage({super.key});
 
   @override
-  _CommunityPageState createState() => _CommunityPageState();
+  State<CommunityPage> createState() => _CommunityPageState();
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  final List<Map<String, dynamic>> _posts = [
-    {
-      'title': 'Primer post',
-      'content': 'Descripci\u00f3n del primer post. Esta es una publicaci\u00f3n de ejemplo.',
-      'likes': 0,
-    },
-    {
-      'title': 'Segundo post',
-      'content': 'Otra descripci\u00f3n para mostrar c\u00f3mo se ver\u00e1n las publicaciones.',
-      'likes': 0,
-    },
-    {
-      'title': 'Tercer post',
-      'content': 'Publicaci\u00f3n de prueba con texto m\u00e1s largo para ocupar espacio y ver el dise\u00f1o.',
-      'likes': 0,
-    },
+  final List<Post> _posts = [
+    Post(
+      id: 'p1',
+      title: 'Primer post',
+      content:
+          'Descripción del primer post. Esta es una publicación de ejemplo.',
+      likes: 0,
+    ),
+    Post(
+      id: 'p2',
+      title: 'Segundo post',
+      content:
+          'Otra descripción para mostrar cómo se ven las publicaciones.',
+      likes: 0,
+    ),
+    Post(
+      id: 'p3',
+      title: 'Tercer post',
+      content:
+          'Publicación de prueba con texto más largo para ocupar espacio y ver el diseño.',
+      likes: 0,
+    ),
   ];
 
   void _likePost(int index) {
     setState(() {
-      _posts[index]['likes'] = _posts[index]['likes'] + 1;
+      final post = _posts[index];
+      _posts[index] = Post(
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        likes: post.likes + 1,
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Comunidad'),
-      ),
+      appBar: AppBar(title: const Text('Comunidad')),
       body: ListView.builder(
         itemCount: _posts.length,
         itemBuilder: (context, index) {
           final post = _posts[index];
-          return Card(
-            margin: const EdgeInsets.all(8.0),
-            elevation: 2.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
+          return ListTile(
+            title: Text(post.title),
+            subtitle: Text(post.content),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.thumb_up),
+                  onPressed: () => _likePost(index),
+                ),
+                Text('${post.likes}'),
+              ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    post['title'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                    const SizedBox(height: 4.0),
-                  Text(post['content']),
-                  const SizedBox(height: 8.0),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.thumb_up),
-                        onPressed: () => _likePost(index),
-                      ),
-                      Text('${post['likes']}'),
-                      IconButton(
-                        icon: const Icon(Icons.comment),
-                        onPressed: () {
-                          // TODO: Navegar a la pantalla de comentarios
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.bookmark),
-                        onPressed: () {
-                          // TODO: Guardar la publicaci\u00f3n en favoritos
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => PostDetailPage(post: post),
+                ),
+              );
+            },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Navegar a la pantalla para crear una nueva publicaci\u00f3n
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }
