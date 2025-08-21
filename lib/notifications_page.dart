@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import 'models/notification.dart';
+import 'package:flutter/material.dar
+  import 'package:yominero/shared/models/notification.dart';   
+
 
 /// Displays a list of notifications. Users can mark each
-/// notification as read. In a full application these
+/// 
+notification as read. In a full application these
 /// notifications would be fetched from a backend service and
 /// updated accordingly.
 class NotificationsPage extends StatefulWidget {
