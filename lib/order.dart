@@ -1,8 +1,5 @@
-import 'product.dart';
+import 'package:yominero/shared/models/product.dart';
 
-/// Represents an order placed by the user. Each order has an
-/// identifier, a list of purchased products, a total cost, and a
-/// status indicating its current state (e.g. pendiente, enviado).
 class Order {
   final String id;
   final List<Product> items;
