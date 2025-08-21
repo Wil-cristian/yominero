@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'models/order.dart';
-import 'models/product.dart';
+import 'package:yominero/shared/models/order.dart';
+import 'package:yominero/shared/models/product.dart';
+
+//import 'package:yominero/shared/models/order.dart/order.dart';
+//import 'models/product.dart';
 
 /// A simple page that shows a list of orders. Each order contains
 /// multiple products, a total amount, and a status. Tapping on
