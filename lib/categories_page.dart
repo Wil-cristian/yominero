@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'models/category.dart';
+import 'package:yominero/shared/models/category.dart';
+
+
 
 /// Displays a list of categories for products and services. Each
 /// category includes an identifier, a name, and a description.
