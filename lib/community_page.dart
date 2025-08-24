@@ -15,10 +15,14 @@ class _CommunityPageState extends State<CommunityPage> {
       id: 'p1',
       title: 'Primer post',
       content: 'Descripción del primer post. Esta es una publicación de ejemplo.',
+              author: 'Usuario 1',
+        createdAt: DateTime.now(),
       likes: 5,
     ),
     Post(
       id: 'p2',
+              author: 'Usuario 2',
+        createdAt: DateTime.now(),
       title: 'Segundo post',
       content: 'Otra descripción para mostrar cómo se ven las publicaciones.',
       likes: 12,
@@ -27,6 +31,8 @@ class _CommunityPageState extends State<CommunityPage> {
       id: 'p3',
       title: 'Tercer post',
       content: 'Publicación de prueba con texto más largo para ocupar espacio y ver el diseño.',
+              author: 'Usuario 3',
+        createdAt: DateTime.now(),
       likes: 8,
     ),
   ];
@@ -38,8 +44,13 @@ class _CommunityPageState extends State<CommunityPage> {
         id: post.id,
         title: post.title,
         content: post.content,
+              author: post.author,
+      createdAt: post.createdAt,
+      imageUrl: post.imageUrl,
+      comments: post.comments,
         likes: post.likes + 1,
       );
+            
     });
   }
 
