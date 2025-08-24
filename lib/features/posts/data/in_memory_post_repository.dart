@@ -96,7 +96,7 @@ class InMemoryPostRepository implements PostRepository {
     if (likedUsers.contains(userId)) return false;
     likedUsers.add(userId);
     final current = _posts[index];
-  _posts[index] = current.copyWith(likes: current.likes + 1);
+    _posts[index] = current.copyWith(likes: current.likes + 1);
     return true;
   }
 

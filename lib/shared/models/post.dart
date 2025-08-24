@@ -78,7 +78,8 @@ class Post {
     double? pricingTo,
     String? pricingUnit,
     String? availability,
-  }) => Post(
+  }) =>
+      Post(
         id: id,
         type: type ?? this.type,
         authorId: authorId ?? this.authorId,
@@ -114,7 +115,8 @@ class Post {
     String? imageUrl,
     int likes = 0,
     int comments = 0,
-  }) => Post(
+  }) =>
+      Post(
         id: id,
         type: PostType.community,
         authorId: author,

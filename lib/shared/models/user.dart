@@ -14,7 +14,8 @@ class PricingRange {
   final double from;
   final double to;
   final String unit; // e.g. "hora", "proyecto"
-  const PricingRange({required this.from, required this.to, required this.unit});
+  const PricingRange(
+      {required this.from, required this.to, required this.unit});
 }
 
 class AvailabilityWindow {
