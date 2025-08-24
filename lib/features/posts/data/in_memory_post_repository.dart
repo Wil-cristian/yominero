@@ -5,7 +5,7 @@ import '../../posts/domain/post_repository.dart';
 /// Simple in-memory implementation used for development & tests.
 class InMemoryPostRepository implements PostRepository {
   final List<Post> _posts = [
-    Post(
+    Post.simple(
       id: 'p1',
       title: 'Primer post',
       content:
@@ -14,7 +14,7 @@ class InMemoryPostRepository implements PostRepository {
       createdAt: DateTime.now(),
       likes: 5,
     ),
-    Post(
+    Post.simple(
       id: 'p2',
       title: 'Segundo post',
       content: 'Otra descripción para mostrar cómo se ven las publicaciones.',
@@ -22,7 +22,7 @@ class InMemoryPostRepository implements PostRepository {
       createdAt: DateTime.now(),
       likes: 12,
     ),
-    Post(
+    Post.simple(
       id: 'p3',
       title: 'Tercer post',
       content:
@@ -30,6 +30,38 @@ class InMemoryPostRepository implements PostRepository {
       author: 'Usuario 3',
       createdAt: DateTime.now(),
       likes: 8,
+    ),
+    // sample request
+    Post(
+      id: 'r1',
+      type: PostType.request,
+      authorId: 'Usuario 4',
+      title: 'Se requiere técnico para mantenimiento de taladro',
+      content: 'Busco técnico certificado para mantenimiento semanal.',
+      createdAt: DateTime.now(),
+      categories: const ['Maquinaria'],
+      tags: const ['taladro', 'mantenimiento'],
+      requiredTags: const ['taladro', 'mantenimiento'],
+      budgetAmount: 1200,
+      budgetCurrency: 'USD',
+      likes: 0,
+    ),
+    // sample offer
+    Post(
+      id: 'o1',
+      type: PostType.offer,
+      authorId: 'Usuario 5',
+      title: 'Servicio de topografía subterránea',
+      content: 'Ofrezco topografía y mapeo con dron especializado.',
+      createdAt: DateTime.now(),
+      categories: const ['Topografía'],
+      tags: const ['topografía', 'mapeo', 'drone'],
+      serviceName: 'Topografía subterránea',
+      serviceTags: const ['topografía', 'mapeo', 'drone'],
+      pricingFrom: 500,
+      pricingTo: 2000,
+      pricingUnit: 'proyecto',
+      availability: 'Lun-Sab 08:00-18:00',
     ),
   ];
 
@@ -39,18 +71,17 @@ class InMemoryPostRepository implements PostRepository {
   List<Post> getAll() => List.unmodifiable(_posts);
 
   @override
-  Post create(
-      {required String author,
-      required String title,
-      required String content}) {
-    final post = Post(
+  Post create({
+    required String author,
+    required String title,
+    required String content,
+  }) {
+    final post = Post.simple(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       title: title,
       content: content,
       author: author,
       createdAt: DateTime.now(),
-      likes: 0,
-      comments: 0,
     );
     _posts.insert(0, post); // newest first
     return post;
@@ -65,16 +96,7 @@ class InMemoryPostRepository implements PostRepository {
     if (likedUsers.contains(userId)) return false;
     likedUsers.add(userId);
     final current = _posts[index];
-    _posts[index] = Post(
-      id: current.id,
-      title: current.title,
-      content: current.content,
-      author: current.author,
-      createdAt: current.createdAt,
-      imageUrl: current.imageUrl,
-      comments: current.comments,
-      likes: current.likes + 1,
-    );
+  _posts[index] = current.copyWith(likes: current.likes + 1);
     return true;
   }
 

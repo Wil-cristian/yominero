@@ -352,7 +352,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        post.author,
+                                        post.authorId,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge
