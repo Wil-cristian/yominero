@@ -75,15 +75,54 @@ class InMemoryPostRepository implements PostRepository {
     required String author,
     required String title,
     required String content,
+    PostType type = PostType.community,
+    List<String> tags = const [],
+    List<String> categories = const [],
+    List<String>? requiredTags,
+    double? budgetAmount,
+    String? budgetCurrency,
+    DateTime? deadline,
+    String? serviceName,
+    List<String>? serviceTags,
+    double? pricingFrom,
+    double? pricingTo,
+    String? pricingUnit,
+    String? availability,
   }) {
-    final post = Post.simple(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
-      title: title,
-      content: content,
-      author: author,
-      createdAt: DateTime.now(),
-    );
-    _posts.insert(0, post); // newest first
+    final id = DateTime.now().microsecondsSinceEpoch.toString();
+    final now = DateTime.now();
+    final Post post;
+    if (type == PostType.community) {
+      post = Post.simple(
+        id: id,
+        title: title,
+        content: content,
+        author: author,
+        createdAt: now,
+      ).copyWith(tags: tags, categories: categories);
+    } else {
+      post = Post(
+        id: id,
+        type: type,
+        authorId: author,
+        title: title,
+        content: content,
+        createdAt: now,
+        tags: tags,
+        categories: categories,
+        requiredTags: requiredTags,
+        budgetAmount: budgetAmount,
+        budgetCurrency: budgetCurrency,
+        deadline: deadline,
+        serviceName: serviceName,
+        serviceTags: serviceTags,
+        pricingFrom: pricingFrom,
+        pricingTo: pricingTo,
+        pricingUnit: pricingUnit,
+        availability: availability,
+      );
+    }
+    _posts.insert(0, post);
     return post;
   }
 

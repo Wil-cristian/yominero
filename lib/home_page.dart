@@ -33,9 +33,9 @@ class HomePage extends StatelessWidget {
   ];
 
   Future<void> _selectProfile(BuildContext context, User user) async {
-    // Simula login estableciendo el usuario directamente.
-    AuthService.instance.login(email: user.email, password: 'x').then(
-        (_) => Navigator.of(context).pushReplacementNamed(AppRoutes.main));
+    await AuthService.instance.login(email: user.email, password: 'x');
+    if (!context.mounted) return;
+    Navigator.of(context).pushReplacementNamed(AppRoutes.main);
   }
 
   @override

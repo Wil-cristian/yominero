@@ -1,3 +1,5 @@
+import 'post.dart';
+
 enum UserRole { admin, vendor, customer }
 
 enum VerificationStatus { none, pending, verified }
@@ -57,6 +59,12 @@ class User {
   final List<ServiceOffering> servicesOffered;
   final List<String> interests; // generic tags of interest
   final List<String> watchKeywords;
+  // New preference fields for post suggestion personalization
+  final Set<PostType>
+      preferredPostTypes; // which post types user wants in suggestions
+  final List<String>
+      followedTags; // explicit tags the user chose to follow (beyond interests)
+  final List<String> followedCategories; // categories user follows
   final VerificationStatus verificationStatus;
   final double ratingAvg;
   final int ratingCount;
@@ -76,11 +84,19 @@ class User {
     this.servicesOffered = const [],
     this.interests = const [],
     this.watchKeywords = const [],
+    Set<PostType>? preferredPostTypes,
+    this.followedTags = const [],
+    this.followedCategories = const [],
     this.verificationStatus = VerificationStatus.none,
     this.ratingAvg = 0,
     this.ratingCount = 0,
     this.completedJobsCount = 0,
-  });
+  }) : preferredPostTypes = preferredPostTypes ??
+            const {
+              PostType.community,
+              PostType.request,
+              PostType.offer,
+            };
 
   User copyWith({
     String? username,
@@ -95,6 +111,9 @@ class User {
     List<ServiceOffering>? servicesOffered,
     List<String>? interests,
     List<String>? watchKeywords,
+    Set<PostType>? preferredPostTypes,
+    List<String>? followedTags,
+    List<String>? followedCategories,
     VerificationStatus? verificationStatus,
     double? ratingAvg,
     int? ratingCount,
@@ -114,6 +133,9 @@ class User {
         servicesOffered: servicesOffered ?? this.servicesOffered,
         interests: interests ?? this.interests,
         watchKeywords: watchKeywords ?? this.watchKeywords,
+        preferredPostTypes: preferredPostTypes ?? this.preferredPostTypes,
+        followedTags: followedTags ?? this.followedTags,
+        followedCategories: followedCategories ?? this.followedCategories,
         verificationStatus: verificationStatus ?? this.verificationStatus,
         ratingAvg: ratingAvg ?? this.ratingAvg,
         ratingCount: ratingCount ?? this.ratingCount,

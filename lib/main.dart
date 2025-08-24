@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/routing/app_router.dart';
+import 'core/di/locator.dart';
 import 'core/auth/auth_service.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/colors.dart';
@@ -8,8 +9,10 @@ import 'community_page.dart';
 import 'products_page.dart';
 import 'services_page.dart';
 import 'profile_page.dart';
+import 'groups_page.dart';
 
 void main() {
+  setupLocator();
   runApp(const MyApp());
 }
 
@@ -41,10 +44,11 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
-    _pages = [
-      const CommunityPage(),
-      const ProductsPage(),
-      const ServicesPage(),
+    _pages = const [
+      CommunityPage(),
+      GroupsPage(),
+      ProductsPage(),
+      ServicesPage(),
     ];
   }
 
@@ -78,8 +82,12 @@ class _MainAppState extends State<MainApp> {
           showUnselectedLabels: true,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.group),
+              icon: Icon(Icons.forum),
               label: 'Comunidad',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.groups),
+              label: 'Grupos',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_cart),
