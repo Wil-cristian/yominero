@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'models/product.dart';
+import 'package:yominero/shared/models/product.dart';
 import 'product_detail_page.dart';
 
-/// Displays a list of products and allows users to add or remove
-/// products from a simple cart. Tapping on a product navigates to
-/// the [ProductDetailPage].
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
 
@@ -13,7 +10,7 @@ class ProductsPage extends StatefulWidget {
 }
 
 class _ProductsPageState extends State<ProductsPage> {
-  final List<Product> _products = [
+  final List<Product> _allProducts = [
     Product(
       id: '1',
       name: 'Casco de seguridad',
@@ -34,51 +31,71 @@ class _ProductsPageState extends State<ProductsPage> {
     ),
   ];
 
-  final Set<int> _cart = {};
-
-  void _toggleCart(int index) {
-    setState(() {
-      if (_cart.contains(index)) {
-        _cart.remove(index);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Eliminado del carrito')),
-        );
-      } else {
-        _cart.add(index);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Agregado al carrito')),
-        );
-      }
-    });
-  }
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
+    final List<Product> filtered = _allProducts.where((p) {
+      return p.name.toLowerCase().contains(_searchQuery.toLowerCase());
+    }).toList();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Productos')),
-      body: ListView.builder(
-        itemCount: _products.length,
-        itemBuilder: (context, index) {
-          final product = _products[index];
-          final inCart = _cart.contains(index);
-          return ListTile(
-            title: Text(product.name),
-            subtitle: Text(product.description),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => ProductDetailPage(product: product),
+      appBar: AppBar(
+        title: const Text('Productos'),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Buscar productos',
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.grey,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
                 ),
-              );
-            },
-            trailing: IconButton(
-              icon: Icon(
-                inCart ? Icons.remove_shopping_cart : Icons.add_shopping_cart,
               ),
-              onPressed: () => _toggleCart(index),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filtered.length,
+              itemBuilder: (context, index) {
+                final product = filtered[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.shopping_bag),
+                      title: Text(product.name),
+                      subtitle: Text(product.description),
+                      trailing: Text('\$${product.price.toStringAsFixed(2)}'),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => ProductDetailPage(product: product),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
