@@ -19,7 +19,8 @@ ThemeData _buildTheme() {
     error: AppColors.error,
     onPrimary: AppColors.white,
     onSecondary: AppColors.onColor(AppColors.secondary),
-    onBackground: AppColors.textPrimary,
+  // onBackground deprecated -> use onSurface
+  onBackground: AppColors.textPrimary,
     onSurface: AppColors.textPrimary,
     onError: AppColors.white,
   );
@@ -133,7 +134,7 @@ class PalettePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(.15),
+                  color: Colors.black.withValues(alpha: .15),
                   blurRadius: 6,
                   offset: const Offset(0, 3),
                 )

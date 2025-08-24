@@ -93,7 +93,7 @@ class _CommunityPageState extends State<CommunityPage> {
             child: IconButton(
               icon: Icon(
                 Icons.add_circle_outline,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
                 size: 28,
               ),
               onPressed: () {},
@@ -177,8 +177,8 @@ class _CommunityPageState extends State<CommunityPage> {
                           children: [
                             CircleAvatar(
                               radius: 20,
-                backgroundColor:
-                  AppColors.secondaryContainer.withOpacity(.6),
+                              backgroundColor:
+                                  AppColors.secondaryContainer.withOpacity(.6),
                               child: Text(
                                 post.title[0].toUpperCase(),
                                 style: const TextStyle(
@@ -245,8 +245,8 @@ class _CommunityPageState extends State<CommunityPage> {
                                   vertical: 8,
                                 ),
                                 decoration: BoxDecoration(
-                  color: liked
-                    ? AppColors.primary.withOpacity(.15)
+                                  color: liked
+                                      ? AppColors.primary.withOpacity(.15)
                                       : Colors.grey[100],
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -257,18 +257,18 @@ class _CommunityPageState extends State<CommunityPage> {
                                       liked
                                           ? Icons.favorite
                                           : Icons.favorite_border,
-                    color: liked
-                      ? AppColors.primary
-                      : Colors.grey[600],
+                                      color: liked
+                                          ? AppColors.primary
+                                          : Colors.grey[600],
                                       size: 18,
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
                                       '${post.likes}',
                                       style: TextStyle(
-                    color: liked
-                      ? AppColors.primary
-                      : Colors.grey[600],
+                                        color: liked
+                                            ? AppColors.primary
+                                            : Colors.grey[600],
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),

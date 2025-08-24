@@ -45,7 +45,7 @@ class ServicesPage extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 Icons.notifications_outlined,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
                 size: 28,
               ),
               onPressed: () {},
@@ -253,12 +253,12 @@ class ServicesPage extends StatelessWidget {
   Color _getServiceColor(String serviceName) {
     final lower = serviceName.toLowerCase();
     if (lower.contains('topografía') || lower.contains('mapeo')) {
-  return AppColors.info;
+      return AppColors.info;
     } else if (lower.contains('mantenimiento')) {
-  return AppColors.success;
+      return AppColors.success;
     } else if (lower.contains('legal')) {
-  return AppColors.textSecondary;
+      return AppColors.textSecondary;
     }
-  return AppColors.primary;
+    return AppColors.primary;
   }
 }
