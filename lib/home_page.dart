@@ -126,14 +126,24 @@ class HomePage extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 4),
                                     Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Chip(
-                                          label: Text(u.role.name),
-                                          backgroundColor: AppColors.secondaryContainer.withOpacity(.4),
-                                          labelStyle: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
+                                          label: Text(
+                                            u.role.name,
+                                            style: const TextStyle(
+                                              color: AppColors.primary,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 12,
+                                            ),
                                           ),
+                                          backgroundColor: AppColors.surface,
+                                          side: const BorderSide(
+                                            color: AppColors.outline,
+                                            width: .8,
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 0),
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
