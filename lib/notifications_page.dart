@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yominero/shared/models/notification.dart';
+import 'core/theme/colors.dart';
 
 /// Displays a list of notifications. Users can mark each
 /// notification as read. In a full application these
@@ -52,9 +53,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
             title: Text(notification.title),
             subtitle: Text(notification.description),
             trailing: notification.isRead
-                ? const Icon(Icons.check, color: Colors.green)
+                ? const Icon(Icons.check, color: AppColors.success)
                 : IconButton(
-                    icon: const Icon(Icons.mark_email_read),
+                    icon: const Icon(Icons.mark_email_read,
+                        color: AppColors.primary),
                     onPressed: () => _markAsRead(index),
                   ),
           );

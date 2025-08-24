@@ -19,8 +19,6 @@ ThemeData _buildTheme() {
     error: AppColors.error,
     onPrimary: AppColors.white,
     onSecondary: AppColors.onColor(AppColors.secondary),
-  // onBackground deprecated -> use onSurface
-  onBackground: AppColors.textPrimary,
     onSurface: AppColors.textPrimary,
     onError: AppColors.white,
   );

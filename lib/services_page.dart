@@ -1,34 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:yominero/shared/models/service.dart';
 import 'core/theme/colors.dart';
-import 'service_detail_page.dart';
+import 'core/routing/app_router.dart';
+import 'core/di/locator.dart';
+import 'features/services/domain/service_repository.dart';
 
-class ServicesPage extends StatelessWidget {
+class ServicesPage extends StatefulWidget {
   const ServicesPage({super.key});
 
   @override
+  State<ServicesPage> createState() => _ServicesPageState();
+}
+
+class _ServicesPageState extends State<ServicesPage> {
+  late final ServiceRepository _repo;
+  late List<Service> _services;
+
+  @override
+  void initState() {
+    super.initState();
+    _repo = Locator.serviceRepository;
+    _services = _repo.getAll();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<Service> services = [
-      Service(
-        id: 's1',
-        name: 'Topografía y mapeo',
-        description:
-            'Servicio de topografía y mapeo para estudios y planificación.',
-        rate: 120.0,
-      ),
-      Service(
-        id: 's2',
-        name: 'Mantenimiento de maquinaria',
-        description: 'Revisión y reparación de equipos pesados de minería.',
-        rate: 200.0,
-      ),
-      Service(
-        id: 's3',
-        name: 'Asesoría legal minera',
-        description: 'Consultoría en normas y licencias de minería.',
-        rate: 150.0,
-      ),
-    ];
+    final services = _services;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -121,10 +118,9 @@ class ServicesPage extends StatelessWidget {
                   final service = services[index];
                   return GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => ServiceDetailPage(service: service),
-                        ),
+                      Navigator.of(context).pushNamed(
+                        AppRoutes.serviceDetail,
+                        arguments: service,
                       );
                     },
                     child: Container(

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yominero/shared/models/user.dart';
 import 'core/auth/auth_service.dart';
 import 'package:yominero/shared/models/post.dart';
-import 'post_detail_page.dart';
-import 'home_page.dart';
+import 'core/routing/app_router.dart';
 import 'core/theme/colors.dart';
 
 /// Simple profile page that displays basic user information and a list
@@ -33,7 +32,8 @@ class ProfilePage extends StatelessWidget {
           Center(
             child: CircleAvatar(
               radius: 40,
-              backgroundColor: AppColors.secondaryContainer.withOpacity(.55),
+              backgroundColor:
+                  AppColors.secondaryContainer.withValues(alpha: .55),
               backgroundImage:
                   user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
               child: user.avatarUrl == null
@@ -79,8 +79,9 @@ class ProfilePage extends StatelessWidget {
               title: Text(post.title),
               subtitle: Text(post.content),
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => PostDetailPage(post: post)),
+                Navigator.of(context).pushNamed(
+                  AppRoutes.postDetail,
+                  arguments: post,
                 );
               },
             ),
@@ -89,8 +90,8 @@ class ProfilePage extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: () {
               AuthService.instance.logout();
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => HomePage()),
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                AppRoutes.home,
                 (route) => false,
               );
             },

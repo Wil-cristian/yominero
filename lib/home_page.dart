@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:yominero/shared/models/user.dart';
 import 'core/auth/auth_service.dart';
-import 'main.dart';
+import 'core/routing/app_router.dart';
 import 'core/theme/colors.dart';
 
 /// Home / onboarding screen allowing selecting one of predefined profiles.
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   final List<User> demoProfiles = const [
     User(
@@ -34,11 +34,8 @@ class HomePage extends StatelessWidget {
 
   Future<void> _selectProfile(BuildContext context, User user) async {
     // Simula login estableciendo el usuario directamente.
-    AuthService.instance
-        .login(email: user.email, password: 'x')
-        .then((_) => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const MainApp()),
-            ));
+    AuthService.instance.login(email: user.email, password: 'x').then(
+        (_) => Navigator.of(context).pushReplacementNamed(AppRoutes.main));
   }
 
   @override
@@ -126,7 +123,8 @@ class HomePage extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 4),
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Chip(
                                           label: Text(
