@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yominero/shared/models/service.dart';
+import 'core/theme/colors.dart';
 import 'service_detail_page.dart';
 
 class ServicesPage extends StatelessWidget {
@@ -30,15 +31,11 @@ class ServicesPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Servicios',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-            color: Color(0xFF2D3436),
-          ),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -46,9 +43,9 @@ class ServicesPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 16),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.notifications_outlined,
-                color: Color(0xFF2D3436),
+                color: Theme.of(context).colorScheme.onBackground,
                 size: 28,
               ),
               onPressed: () {},
@@ -98,20 +95,18 @@ class ServicesPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Servicios disponibles',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF2D3436),
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 TextButton(
                   onPressed: () {},
                   child: Text(
                     'Ver todos',
-                    style: TextStyle(
-                      color: Colors.orange[600],
+                    style: const TextStyle(
+                      color: AppColors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -169,20 +164,23 @@ class ServicesPage extends StatelessWidget {
                               children: [
                                 Text(
                                   service.name,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF2D3436),
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
                                   service.description,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                    height: 1.4,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.grey[700],
+                                        height: 1.4,
+                                      ),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -193,10 +191,10 @@ class ServicesPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       '\$${service.rate.toStringAsFixed(0)}/hora',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.orange[600],
+                                        color: AppColors.primary,
                                       ),
                                     ),
                                     Container(
@@ -205,7 +203,7 @@ class ServicesPage extends StatelessWidget {
                                         vertical: 6,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.orange[600],
+                                        color: AppColors.primary,
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: const Text(
@@ -253,13 +251,14 @@ class ServicesPage extends StatelessWidget {
   }
 
   Color _getServiceColor(String serviceName) {
-    if (serviceName.toLowerCase().contains('topografía')) {
-      return Colors.blue;
-    } else if (serviceName.toLowerCase().contains('mantenimiento')) {
-      return Colors.green;
-    } else if (serviceName.toLowerCase().contains('legal')) {
-      return Colors.purple;
+    final lower = serviceName.toLowerCase();
+    if (lower.contains('topografía') || lower.contains('mapeo')) {
+  return AppColors.info;
+    } else if (lower.contains('mantenimiento')) {
+  return AppColors.success;
+    } else if (lower.contains('legal')) {
+  return AppColors.textSecondary;
     }
-    return Colors.orange;
+  return AppColors.primary;
   }
 }

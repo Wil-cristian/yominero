@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'core/theme/colors.dart';
+import 'core/auth/auth_service.dart';
 import 'package:yominero/shared/models/post.dart';
 import 'post_detail_page.dart';
 
@@ -39,9 +41,28 @@ class _CommunityPageState extends State<CommunityPage> {
     ),
   ];
 
+  // Map of postId -> set of userIds who liked it (in-memory, mock persistence)
+  final Map<String, Set<String>> _likesByPost = {};
+
   void _likePost(int index) {
+    final user = AuthService.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Debes iniciar sesión para dar like.')),
+      );
+      return;
+    }
+    final post = _posts[index];
+    final likedUsers = _likesByPost.putIfAbsent(post.id, () => <String>{});
+    if (likedUsers.contains(user.id)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ya le diste like a este post.')),
+      );
+      return; // prevent multiple likes by same user
+    }
+    likedUsers.add(user.id);
     setState(() {
-      final post = _posts[index];
+      // increment stored likes only once per user
       _posts[index] = Post(
         id: post.id,
         title: post.title,
@@ -58,15 +79,11 @@ class _CommunityPageState extends State<CommunityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Comunidad',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-            color: Color(0xFF2D3436),
-          ),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -74,9 +91,9 @@ class _CommunityPageState extends State<CommunityPage> {
           Container(
             margin: const EdgeInsets.only(right: 16),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.add_circle_outline,
-                color: Color(0xFF2D3436),
+                color: Theme.of(context).colorScheme.onBackground,
                 size: 28,
               ),
               onPressed: () {},
@@ -128,6 +145,9 @@ class _CommunityPageState extends State<CommunityPage> {
               itemCount: _posts.length,
               itemBuilder: (context, index) {
                 final post = _posts[index];
+                final currentUser = AuthService.instance.currentUser;
+                final liked = currentUser != null &&
+                    (_likesByPost[post.id]?.contains(currentUser.id) ?? false);
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
@@ -157,11 +177,12 @@ class _CommunityPageState extends State<CommunityPage> {
                           children: [
                             CircleAvatar(
                               radius: 20,
-                              backgroundColor: Colors.orange[100],
+                backgroundColor:
+                  AppColors.secondaryContainer.withOpacity(.6),
                               child: Text(
                                 post.title[0].toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.orange[600],
+                                style: const TextStyle(
+                                  color: AppColors.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -174,11 +195,10 @@ class _CommunityPageState extends State<CommunityPage> {
                                 children: [
                                   Text(
                                     'Usuario ${index + 1}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Color(0xFF2D3436),
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
                                     'hace ${index + 1}h',
@@ -200,20 +220,19 @@ class _CommunityPageState extends State<CommunityPage> {
                         const SizedBox(height: 16),
                         Text(
                           post.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2D3436),
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           post.content,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                            height: 1.5,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.grey[700],
+                                    height: 1.5,
+                                  ),
                         ),
                         const SizedBox(height: 20),
                         Row(
@@ -226,22 +245,30 @@ class _CommunityPageState extends State<CommunityPage> {
                                   vertical: 8,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[100],
+                  color: liked
+                    ? AppColors.primary.withOpacity(.15)
+                                      : Colors.grey[100],
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(
-                                      Icons.favorite_border,
-                                      color: Colors.grey[600],
+                                      liked
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                    color: liked
+                      ? AppColors.primary
+                      : Colors.grey[600],
                                       size: 18,
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
                                       '${post.likes}',
                                       style: TextStyle(
-                                        color: Colors.grey[600],
+                    color: liked
+                      ? AppColors.primary
+                      : Colors.grey[600],
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
