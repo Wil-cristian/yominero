@@ -14,7 +14,6 @@ ThemeData _buildTheme() {
     primaryContainer: AppColors.primaryContainer,
     secondary: AppColors.secondary,
     secondaryContainer: AppColors.secondaryContainer,
-    background: AppColors.background,
     surface: AppColors.surface,
     error: AppColors.error,
     onPrimary: AppColors.white,
@@ -88,73 +87,4 @@ ThemeData _buildTheme() {
   );
 }
 
-class PalettePage extends StatelessWidget {
-  const PalettePage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final entries = <MapEntry<String, Color>>[
-      MapEntry('primary', AppColors.primary),
-      MapEntry('primaryContainer', AppColors.primaryContainer),
-      MapEntry('secondary', AppColors.secondary),
-      MapEntry('secondaryContainer', AppColors.secondaryContainer),
-      MapEntry('background', AppColors.background),
-      MapEntry('backgroundAlt', AppColors.backgroundAlt),
-      MapEntry('surface', AppColors.surface),
-      MapEntry('surfaceAlt', AppColors.surfaceAlt),
-      MapEntry('outline', AppColors.outline),
-      MapEntry('textPrimary', AppColors.textPrimary),
-      MapEntry('textSecondary', AppColors.textSecondary),
-      MapEntry('success', AppColors.success),
-      MapEntry('successContainer', AppColors.successContainer),
-      MapEntry('error', AppColors.error),
-      MapEntry('errorContainer', AppColors.errorContainer),
-      MapEntry('warning', AppColors.warning),
-      MapEntry('warningContainer', AppColors.warningContainer),
-      MapEntry('info', AppColors.info),
-      MapEntry('infoContainer', AppColors.infoContainer),
-    ];
-    return Scaffold(
-      appBar: AppBar(title: const Text('Paleta de colores')),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 2.8,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-        ),
-        itemCount: entries.length,
-        itemBuilder: (context, i) {
-          final e = entries[i];
-          return Container(
-            decoration: BoxDecoration(
-              color: e.value,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: .15),
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
-                )
-              ],
-            ),
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(e.key,
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
-                const Spacer(),
-                Text(
-                    '#${e.value.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
-                    style:
-                        const TextStyle(color: Colors.white70, fontSize: 12)),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
+// Removed unused PalettePage widget (was only for manual color preview).

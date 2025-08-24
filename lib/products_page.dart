@@ -41,7 +41,7 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   void initState() {
     super.initState();
-    _repo = Locator.productRepository;
+    _repo = sl<ProductRepository>();
     _allProducts = _repo.getAll();
   }
 
@@ -51,9 +51,8 @@ class _ProductsPageState extends State<ProductsPage> {
       final search = _searchQuery.toLowerCase();
       final matchesSearch = p.name.toLowerCase().contains(search) ||
           p.description.toLowerCase().contains(search);
-      // Category filtering placeholder (no category field yet) -> passes all when not 'Todos'
-      final matchesCategory = _selectedCategory == 'Todos' || true;
-      return matchesSearch && matchesCategory;
+  // Category filtering placeholder removed (no category on Product yet) -> only search filter applied
+  return matchesSearch;
     }).toList();
 
     return Scaffold(
@@ -73,8 +72,8 @@ class _ProductsPageState extends State<ProductsPage> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      AppColors.primary.withOpacity(0.1),
-                      AppColors.secondary.withOpacity(0.05),
+                      AppColors.primary.withValues(alpha: 0.1),
+                      AppColors.secondary.withValues(alpha: 0.05),
                     ],
                   ),
                 ),
@@ -85,7 +84,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
+                        const Text(
                           'Marketplace',
                           style: TextStyle(
                             fontSize: 28,
@@ -94,7 +93,7 @@ class _ProductsPageState extends State<ProductsPage> {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
+                        const Text(
                           'Productos para minería',
                           style: TextStyle(
                             fontSize: 16,
@@ -119,7 +118,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.textPrimary.withOpacity(0.08),
+                          color: AppColors.textPrimary.withValues(alpha: 0.08),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -128,12 +127,13 @@ class _ProductsPageState extends State<ProductsPage> {
                     child: TextField(
                       decoration: InputDecoration(
                         hintText: 'Buscar productos...',
-                        hintStyle: TextStyle(color: AppColors.textSecondary),
+                        hintStyle:
+                            const TextStyle(color: AppColors.textSecondary),
                         prefixIcon:
-                            Icon(Icons.search, color: AppColors.primary),
+                            const Icon(Icons.search, color: AppColors.primary),
                         suffixIcon: _searchQuery.isNotEmpty
                             ? IconButton(
-                                icon: Icon(Icons.clear,
+                                icon: const Icon(Icons.clear,
                                     color: AppColors.textSecondary),
                                 onPressed: () =>
                                     setState(() => _searchQuery = ''),
@@ -201,7 +201,7 @@ class _ProductsPageState extends State<ProductsPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 '${filtered.length} productos encontrados',
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -264,7 +264,7 @@ class _ProductCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.textPrimary.withOpacity(0.08),
+              color: AppColors.textPrimary.withValues(alpha: 0.08),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -278,7 +278,7 @@ class _ProductCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
@@ -290,7 +290,7 @@ class _ProductCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: color.withOpacity(0.2),
+                          color: color.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
@@ -313,7 +313,8 @@ class _ProductCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.textPrimary.withOpacity(0.1),
+                              color:
+                                  AppColors.textPrimary.withValues(alpha: 0.1),
                               blurRadius: 4,
                               offset: const Offset(0, 1),
                             ),
@@ -321,7 +322,7 @@ class _ProductCard extends StatelessWidget {
                         ),
                         child: Text(
                           '\$${product.price.toStringAsFixed(0)}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primary,
@@ -342,7 +343,7 @@ class _ProductCard extends StatelessWidget {
                   children: [
                     Text(
                       product.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
@@ -355,7 +356,7 @@ class _ProductCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         product.description,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.textSecondary,
                           height: 1.3,
@@ -367,9 +368,10 @@ class _ProductCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.star, size: 14, color: AppColors.warning),
+                        const Icon(Icons.star,
+                            size: 14, color: AppColors.warning),
                         const SizedBox(width: 4),
-                        Text(
+                        const Text(
                           '4.5',
                           style: TextStyle(
                             fontSize: 12,
@@ -387,7 +389,7 @@ class _ProductCard extends StatelessWidget {
                             color: AppColors.successContainer,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Disponible',
                             style: TextStyle(
                               fontSize: 10,
@@ -414,8 +416,9 @@ class _ProductCard extends StatelessWidget {
     if (name.contains('linterna')) return Icons.flashlight_on;
     if (name.contains('guantes')) return Icons.back_hand;
     if (name.contains('botas')) return Icons.work;
-    if (name.contains('chaleco'))
+    if (name.contains('chaleco')) {
       return Icons.warning; // closest available icon
+    }
     if (name.contains('detector')) return Icons.sensors;
     if (name.contains('cuerda')) return Icons.link;
     if (name.contains('martillo')) return Icons.build;
