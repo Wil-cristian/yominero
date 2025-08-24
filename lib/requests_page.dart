@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yominero/shared/models/service_request.dart';
 
-//impo 'package:yominero/shared/models/service_request.dart';
-
-// import 'package:yominero/shared/models/service_request.dart/service_request.dart';
-
 /// Shows a list of service requests (RFPs) with their current
 /// status. This page is stateless because the data is static for
 /// this example. In a real implementation the list would be

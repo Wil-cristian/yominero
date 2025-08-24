@@ -13,7 +13,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login() {
     final email = _emailController.text;
-    final password = _passwordController.text;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Intento de login para $email')),
     );
@@ -37,7 +36,8 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Correo electrónico'),
+              decoration:
+                  const InputDecoration(labelText: 'Correo electrónico'),
             ),
             const SizedBox(height: 12),
             TextField(

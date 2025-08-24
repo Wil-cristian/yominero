@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models/product.dart';
+import 'package:yominero/shared/models/product.dart';
 
 /// A simple cart page that displays items added to the cart and
 /// allows users to remove them. The total price of all items is

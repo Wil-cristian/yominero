@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models/post.dart';
+import 'package:yominero/shared/models/post.dart';
 
 /// Page that displays the full content of a post and allows users
 /// to increment the like count. In a real application the likes

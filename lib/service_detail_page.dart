@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models/service.dart';
+import 'package:yominero/shared/models/service.dart';
 
 /// Displays detailed information about a service provider and allows
 /// users to request a quote. In a full implementation, the quote
@@ -33,7 +33,8 @@ class ServiceDetailPage extends StatelessWidget {
               onPressed: () {
                 // Placeholder for request quote logic
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Solicitud de cotización enviada')),
+                  const SnackBar(
+                      content: Text('Solicitud de cotización enviada')),
                 );
               },
               child: const Text('Solicitar cotización'),

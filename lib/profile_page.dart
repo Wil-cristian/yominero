@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'models/user.dart';
-import 'models/post.dart';
+import 'package:yominero/shared/models/user.dart';
+import 'package:yominero/shared/models/post.dart';
 import 'post_detail_page.dart';
 
 /// Simple profile page that displays basic user information and a list

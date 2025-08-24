@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models/product.dart';
+import 'package:yominero/shared/models/product.dart';
 
 /// Displays detailed information about a product and provides an option
 /// to add it to the cart. This is a stateless widget because all

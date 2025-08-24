@@ -14,15 +14,16 @@ class _CommunityPageState extends State<CommunityPage> {
     Post(
       id: 'p1',
       title: 'Primer post',
-      content: 'Descripción del primer post. Esta es una publicación de ejemplo.',
-              author: 'Usuario 1',
-        createdAt: DateTime.now(),
+      content:
+          'Descripción del primer post. Esta es una publicación de ejemplo.',
+      author: 'Usuario 1',
+      createdAt: DateTime.now(),
       likes: 5,
     ),
     Post(
       id: 'p2',
-              author: 'Usuario 2',
-        createdAt: DateTime.now(),
+      author: 'Usuario 2',
+      createdAt: DateTime.now(),
       title: 'Segundo post',
       content: 'Otra descripción para mostrar cómo se ven las publicaciones.',
       likes: 12,
@@ -30,9 +31,10 @@ class _CommunityPageState extends State<CommunityPage> {
     Post(
       id: 'p3',
       title: 'Tercer post',
-      content: 'Publicación de prueba con texto más largo para ocupar espacio y ver el diseño.',
-              author: 'Usuario 3',
-        createdAt: DateTime.now(),
+      content:
+          'Publicación de prueba con texto más largo para ocupar espacio y ver el diseño.',
+      author: 'Usuario 3',
+      createdAt: DateTime.now(),
       likes: 8,
     ),
   ];
@@ -44,13 +46,12 @@ class _CommunityPageState extends State<CommunityPage> {
         id: post.id,
         title: post.title,
         content: post.content,
-              author: post.author,
-      createdAt: post.createdAt,
-      imageUrl: post.imageUrl,
-      comments: post.comments,
+        author: post.author,
+        createdAt: post.createdAt,
+        imageUrl: post.imageUrl,
+        comments: post.comments,
         likes: post.likes + 1,
       );
-            
     });
   }
 
@@ -94,7 +95,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -143,7 +144,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
+                          color: Colors.black.withValues(alpha: 0.08),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),

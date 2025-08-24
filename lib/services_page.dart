@@ -11,7 +11,8 @@ class ServicesPage extends StatelessWidget {
       Service(
         id: 's1',
         name: 'Topografía y mapeo',
-        description: 'Servicio de topografía y mapeo para estudios y planificación.',
+        description:
+            'Servicio de topografía y mapeo para estudios y planificación.',
         rate: 120.0,
       ),
       Service(
@@ -67,7 +68,7 @@ class ServicesPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -139,7 +140,7 @@ class ServicesPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.08),
+                            color: Colors.black.withValues(alpha: 0.08),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -151,7 +152,8 @@ class ServicesPage extends StatelessWidget {
                             width: 60,
                             height: 60,
                             decoration: BoxDecoration(
-                              color: _getServiceColor(service.name).withOpacity(0.1),
+                              color: _getServiceColor(service.name)
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
@@ -186,7 +188,8 @@ class ServicesPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       '\$${service.rate.toStringAsFixed(0)}/hora',

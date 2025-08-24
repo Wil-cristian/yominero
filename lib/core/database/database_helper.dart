@@ -41,7 +41,34 @@ class DatabaseHelper {
   /// Use this method to create the necessary tables. For example:
   /// await db.execute('''CREATE TABLE posts(id TEXT PRIMARY KEY, title TEXT, content TEXT, likes INTEGER)''');
   Future<void> _onCreate(Database db, int version) async {
-    // TODO: implement table creation
+    await db.execute('''
+      CREATE TABLE posts (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        likes INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE products (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        price REAL NOT NULL
+      )
+    ''');
+  }
+
+  // Example helper methods (can be expanded later)
+  Future<int> insertPost(Map<String, dynamic> data) async {
+    final db = await database;
+    return db.insert('posts', data,
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<List<Map<String, dynamic>>> getPosts() async {
+    final db = await database;
+    return db.query('posts', orderBy: 'rowid DESC');
   }
 
   /// Closes the database. Call this when the application is disposed.
