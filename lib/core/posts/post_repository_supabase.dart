@@ -8,7 +8,7 @@ class PostRepositorySupabase implements PostRepository {
 
   @override
   Future<Post> create({
-    required String author,
+    String? author,
     required String title,
     required String content,
     PostType type = PostType.community,
@@ -26,8 +26,12 @@ class PostRepositorySupabase implements PostRepository {
     String? availability,
   }) async {
     final now = DateTime.now().toUtc();
+    // Prefer the authenticated user's id when available (RLS expects auth.uid())
+    final authUserId = _client.auth.currentUser?.id;
+    final authorId = authUserId ?? author;
+
     final row = {
-      'author_id': author,
+      'author_id': authorId,
       'title': title,
       'content': content,
       'type': type.name,
@@ -65,11 +69,14 @@ class PostRepositorySupabase implements PostRepository {
   }
 
   @override
-  Future<bool> like(String postId, String userId) async {
+  Future<bool> like(String postId, [String? userId]) async {
     // Attempt to insert a like; if conflict (already liked) return false.
+  final authUserId = _client.auth.currentUser?.id;
+  final uid = userId ?? authUserId;
+    if (uid == null) return false;
     final row = {
       'post_id': postId,
-      'user_id': userId,
+      'user_id': uid,
       'created_at': DateTime.now().toUtc().toIso8601String()
     };
     final res = await _client.from('post_likes').insert(row).select();
@@ -79,12 +86,15 @@ class PostRepositorySupabase implements PostRepository {
   }
 
   @override
-  Future<bool> hasUserLiked(String postId, String userId) async {
+  Future<bool> hasUserLiked(String postId, [String? userId]) async {
+    final authUserId = _client.auth.currentUser?.id;
+    final uid = userId ?? authUserId;
+    if (uid == null) return false;
     final res = await _client
         .from('post_likes')
         .select('id')
         .eq('post_id', postId)
-        .eq('user_id', userId)
+        .eq('user_id', uid)
         .limit(1)
         .maybeSingle();
     return res != null;

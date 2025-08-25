@@ -168,9 +168,9 @@ class _CommunityPageState extends State<CommunityPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) => PostCreationSheet(
-        authorName: user.name,
-        create: ({
-          required String author,
+          authorName: user.name,
+          create: ({
+            String? author,
           required String title,
           required String content,
           PostType type = PostType.community,
@@ -188,7 +188,7 @@ class _CommunityPageState extends State<CommunityPage> {
           String? availability,
         }) async {
           return _repo.create(
-            author: author,
+              author: author,
             title: title,
             content: content,
             type: type,
@@ -639,9 +639,9 @@ class _PostCard extends StatelessWidget {
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const [
+                    children: [
                       Icon(Icons.chat_bubble_outline,
                           color: Colors.grey, size: 18),
                       SizedBox(width: 6),

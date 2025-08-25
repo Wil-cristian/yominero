@@ -6,7 +6,7 @@ typedef PostCreatedCallback = void Function(Post post);
 
 class PostCreationSheet extends StatefulWidget {
   final Future<Post> Function({
-    required String author,
+    String? author,
     required String title,
     required String content,
     PostType type,
@@ -87,8 +87,7 @@ class _PostCreationSheetState extends State<PostCreationSheet> {
         .toList();
     setState(() => _submitting = true);
     try {
-      final post = await widget.create(
-        author: widget.authorName,
+  final post = await widget.create(
         title: title,
         content: content,
         type: _type,

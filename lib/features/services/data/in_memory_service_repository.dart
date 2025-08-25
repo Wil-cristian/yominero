@@ -21,8 +21,8 @@ class InMemoryServiceRepository implements ServiceRepository {
         rate: 150.0),
   ];
 
-  @override
-  List<Service> getAll() => List.unmodifiable(_services);
+    @override
+    Future<List<Service>> getAll() async => List.unmodifiable(_services);
 
   @override
   Service? getById(String id) => _services.firstWhere((s) => s.id == id,

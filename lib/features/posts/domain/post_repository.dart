@@ -6,8 +6,10 @@ abstract class PostRepository {
   Future<List<Post>> getAll();
 
   /// Create a post of any type. For simple community post, just leave defaults.
+  /// If the caller is authenticated, the repository will prefer the authenticated
+  /// user's id as the author; the `author` parameter can be used as a fallback.
   Future<Post> create({
-    required String author,
+    String? author,
     required String title,
     required String content,
     PostType type,
@@ -28,6 +30,7 @@ abstract class PostRepository {
   });
 
   /// Returns true if like was applied, false if user had already liked.
-  Future<bool> like(String postId, String userId);
-  Future<bool> hasUserLiked(String postId, String userId);
+  /// If `userId` is omitted the repository should prefer the authenticated user.
+  Future<bool> like(String postId, [String? userId]);
+  Future<bool> hasUserLiked(String postId, [String? userId]);
 }

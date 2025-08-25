@@ -19,6 +19,7 @@ class _ServicesPageState extends State<ServicesPage>
   late final ServiceRepository _repo;
   late final PostRepository _postRepo;
   late List<Service> _services;
+  bool _servicesLoading = true;
   late TabController _tabController;
   List<MatchResult> _suggestedRequests = [];
   List<MatchResult> _opportunities = [];
@@ -28,20 +29,31 @@ class _ServicesPageState extends State<ServicesPage>
     super.initState();
     _repo = sl<ServiceRepository>();
     _postRepo = sl<PostRepository>();
-    _services = _repo.getAll();
+    _services = [];
     _tabController = TabController(length: 3, vsync: this);
     _computeMatches();
+    _loadServices();
   }
 
-  void _computeMatches() {
+  Future<void> _loadServices() async {
+    setState(() => _servicesLoading = true);
+    _services = await _repo.getAll();
+    setState(() => _servicesLoading = false);
+  }
+
+  Future<void> _computeMatches() async {
     final user = AuthService.instance.currentUser;
-    final posts = _postRepo.getAll();
+    final posts = await _postRepo.getAll();
     if (user != null) {
-      _suggestedRequests = MatchEngine.requestsForUser(user, posts);
-      _opportunities = MatchEngine.opportunitiesForUser(user, posts);
+      setState(() {
+        _suggestedRequests = MatchEngine.requestsForUser(user, posts);
+        _opportunities = MatchEngine.opportunitiesForUser(user, posts);
+      });
     } else {
-      _suggestedRequests = [];
-      _opportunities = [];
+      setState(() {
+        _suggestedRequests = [];
+        _opportunities = [];
+      });
     }
   }
 
@@ -84,6 +96,10 @@ class _ServicesPageState extends State<ServicesPage>
   }
 
   Widget _buildMyServices() {
+    if (_servicesLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     if (_services.isEmpty) {
       return Center(
         child: Text('Sin servicios todavía',

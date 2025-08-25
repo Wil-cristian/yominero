@@ -72,7 +72,7 @@ class InMemoryPostRepository implements PostRepository {
 
   @override
   Future<Post> create({
-    required String author,
+    String? author,
     required String title,
     required String content,
     PostType type = PostType.community,
@@ -92,19 +92,20 @@ class InMemoryPostRepository implements PostRepository {
     final id = DateTime.now().microsecondsSinceEpoch.toString();
     final now = DateTime.now();
     final Post post;
+    final authorNonNull = author ?? 'Usuario';
     if (type == PostType.community) {
       post = Post.simple(
         id: id,
         title: title,
         content: content,
-        author: author,
+        author: authorNonNull,
         createdAt: now,
       ).copyWith(tags: tags, categories: categories);
     } else {
       post = Post(
         id: id,
         type: type,
-        authorId: author,
+        authorId: authorNonNull,
         title: title,
         content: content,
         createdAt: now,
@@ -127,21 +128,23 @@ class InMemoryPostRepository implements PostRepository {
   }
 
   @override
-  Future<bool> like(String postId, String userId) async {
+  Future<bool> like(String postId, [String? userId]) async {
+    final uid = userId ?? 'anonymous';
     final index = _posts.indexWhere((p) => p.id == postId);
     if (index == -1) return false;
     final likedUsers = _likesByPost.putIfAbsent(postId, () => HashSet());
-    if (likedUsers.contains(userId)) return false;
-    likedUsers.add(userId);
+    if (likedUsers.contains(uid)) return false;
+    likedUsers.add(uid);
     final current = _posts[index];
     _posts[index] = current.copyWith(likes: current.likes + 1);
     return true;
   }
 
   @override
-  Future<bool> hasUserLiked(String postId, String userId) async {
+  Future<bool> hasUserLiked(String postId, [String? userId]) async {
+    final uid = userId ?? 'anonymous';
     final users = _likesByPost[postId];
     if (users == null) return false;
-    return users.contains(userId);
+    return users.contains(uid);
   }
 }
