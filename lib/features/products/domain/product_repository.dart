@@ -1,6 +1,6 @@
 import 'package:yominero/shared/models/product.dart';
 
 abstract class ProductRepository {
-  List<Product> getAll();
-  Product? getById(String id);
+  Future<List<Product>> getAll();
+  Future<Product?> getById(String id);
 }

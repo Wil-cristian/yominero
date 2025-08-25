@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/routing/app_router.dart';
 import 'core/di/locator.dart';
 import 'core/auth/auth_service.dart';
+import 'core/auth/supabase_service.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/colors.dart';
 import 'shared/models/user.dart';
@@ -11,8 +13,20 @@ import 'services_page.dart';
 import 'profile_page.dart';
 import 'groups_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   setupLocator();
+
+  try {
+    await SupabaseService.instance.init();
+  } catch (e) {
+    // Initialization failed; continue but log the error.
+    // In production you may want to halt the app or show an error screen.
+    // ignore: avoid_print
+    print('Supabase init error: $e');
+  }
+
   runApp(const MyApp());
 }
 

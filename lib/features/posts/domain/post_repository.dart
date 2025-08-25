@@ -2,10 +2,11 @@ import 'package:yominero/shared/models/post.dart';
 
 /// Abstraction for retrieving and mutating posts.
 abstract class PostRepository {
-  List<Post> getAll();
+  /// Retrieve all posts (newest first).
+  Future<List<Post>> getAll();
 
   /// Create a post of any type. For simple community post, just leave defaults.
-  Post create({
+  Future<Post> create({
     required String author,
     required String title,
     required String content,
@@ -27,6 +28,6 @@ abstract class PostRepository {
   });
 
   /// Returns true if like was applied, false if user had already liked.
-  bool like(String postId, String userId);
-  bool hasUserLiked(String postId, String userId);
+  Future<bool> like(String postId, String userId);
+  Future<bool> hasUserLiked(String postId, String userId);
 }

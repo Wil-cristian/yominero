@@ -54,13 +54,15 @@ class InMemoryProductRepository implements ProductRepository {
   ];
 
   @override
-  List<Product> getAll() => List.unmodifiable(_products);
+  @override
+  Future<List<Product>> getAll() async => List.unmodifiable(_products);
 
   @override
-  Product? getById(String id) => _products.firstWhere((p) => p.id == id,
-      orElse: () => Product(
-          id: '0',
-          name: 'Desconocido',
-          description: 'No encontrado',
-          price: 0));
+  Future<Product?> getById(String id) async =>
+      _products.firstWhere((p) => p.id == id,
+          orElse: () => Product(
+              id: '0',
+              name: 'Desconocido',
+              description: 'No encontrado',
+              price: 0));
 }

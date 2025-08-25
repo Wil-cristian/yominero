@@ -15,6 +15,8 @@ class ProductsPage extends StatefulWidget {
 class _ProductsPageState extends State<ProductsPage> {
   late final ProductRepository _repo;
   late List<Product> _allProducts;
+  bool _isLoadingRemote = false;
+  String? _remoteError;
 
   String _searchQuery = '';
   String _selectedCategory = 'Todos';
@@ -42,7 +44,25 @@ class _ProductsPageState extends State<ProductsPage> {
   void initState() {
     super.initState();
     _repo = sl<ProductRepository>();
-    _allProducts = _repo.getAll();
+    _allProducts = [];
+
+    _isLoadingRemote = true;
+    () async {
+      try {
+        final list = await _repo.getAll();
+        setState(() {
+          _allProducts = list;
+        });
+      } catch (e) {
+        setState(() {
+          _remoteError = e.toString();
+        });
+      } finally {
+        setState(() {
+          _isLoadingRemote = false;
+        });
+      }
+    }();
   }
 
   @override
@@ -51,8 +71,8 @@ class _ProductsPageState extends State<ProductsPage> {
       final search = _searchQuery.toLowerCase();
       final matchesSearch = p.name.toLowerCase().contains(search) ||
           p.description.toLowerCase().contains(search);
-  // Category filtering placeholder removed (no category on Product yet) -> only search filter applied
-  return matchesSearch;
+      // Category filtering placeholder removed (no category on Product yet) -> only search filter applied
+      return matchesSearch;
     }).toList();
 
     return Scaffold(
@@ -199,13 +219,36 @@ class _ProductsPageState extends State<ProductsPage> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                '${filtered.length} productos encontrados',
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_isLoadingRemote)
+                    const LinearProgressIndicator(minHeight: 3),
+                  if (_remoteError != null)
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(top: 8, bottom: 8),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withValues(alpha: 0.06),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                            color: AppColors.error.withValues(alpha: 0.2)),
+                      ),
+                      child: const Text(
+                        'Error al cargar productos remotos',
+                        style: TextStyle(color: AppColors.error),
+                      ),
+                    ),
+                  Text(
+                    '${filtered.length} productos encontrados',
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

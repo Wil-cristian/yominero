@@ -23,13 +23,39 @@ class _CommunityPageState extends State<CommunityPage> {
   PostSort _sort = PostSort.recent;
   List<MatchResult> _suggestions = [];
   final Map<String, int> _suggestionScores = {};
+  final Map<String, bool> _likesCache = {};
 
   @override
   void initState() {
     super.initState();
     _repo = sl<PostRepository>();
-    _posts = _repo.getAll();
-    _computeSuggestions();
+    _posts = [];
+    _loadPosts();
+  }
+
+  Future<void> _loadPosts() async {
+    try {
+      final posts = await _repo.getAll();
+      _posts = posts;
+      final user = AuthService.instance.currentUser;
+      _likesCache.clear();
+      if (user != null) {
+        // populate likes cache (simple per-post checks)
+        for (final p in _posts) {
+          try {
+            final liked = await _repo.hasUserLiked(p.id, user.id);
+            _likesCache[p.id] = liked;
+          } catch (_) {
+            _likesCache[p.id] = false;
+          }
+        }
+      }
+      _computeSuggestions();
+      if (mounted) setState(() {});
+    } catch (e) {
+      // keep previous list on error
+      if (mounted) setState(() {});
+    }
   }
 
   void _computeSuggestions() {
@@ -101,7 +127,7 @@ class _CommunityPageState extends State<CommunityPage> {
     return '${date.year}-$mm-$dd';
   }
 
-  void _likePost(Post post) {
+  Future<void> _likePost(Post post) async {
     final idx = _posts.indexWhere((p) => p.id == post.id);
     if (idx == -1) return;
     final user = AuthService.instance.currentUser;
@@ -111,15 +137,18 @@ class _CommunityPageState extends State<CommunityPage> {
       );
       return;
     }
-    final applied = _repo.like(post.id, user.id);
+    final applied = await _repo.like(post.id, user.id);
     if (!applied) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ya le diste like a este post.')),
       );
       return;
     }
+    // optimistically update local state
     setState(() {
-      _posts = _repo.getAll();
+      final current = _posts[idx];
+      _posts[idx] = current.copyWith(likes: current.likes + 1);
+      _likesCache[post.id] = true;
       _computeSuggestions();
     });
   }
@@ -176,16 +205,14 @@ class _CommunityPageState extends State<CommunityPage> {
             availability: availability,
           );
         },
-        onCreated: (post) {
-          setState(() {
-            _posts = _repo.getAll();
-            _query = '';
-            _sort = PostSort.recent;
-            // Invalidate cache for current user to force recompute next access
-            final u = AuthService.instance.currentUser;
-            if (u != null) SuggestionCache.instance.invalidateUser(u.id);
-            _computeSuggestions();
-          });
+        onCreated: (post) async {
+          _query = '';
+          _sort = PostSort.recent;
+          // Invalidate cache for current user to force recompute next access
+          final u = AuthService.instance.currentUser;
+          if (u != null) SuggestionCache.instance.invalidateUser(u.id);
+          await _loadPosts();
+          if (mounted) setState(() {});
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Publicado: ${post.title}')),
           );
@@ -316,7 +343,7 @@ class _CommunityPageState extends State<CommunityPage> {
                     final post = postsOfDay[index - cursor];
                     final user = AuthService.instance.currentUser;
                     final liked =
-                        user != null && _repo.hasUserLiked(post.id, user.id);
+                        user != null && (_likesCache[post.id] ?? false);
                     return _PostCard(
                       post: post,
                       liked: liked,

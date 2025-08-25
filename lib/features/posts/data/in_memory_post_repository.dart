@@ -68,10 +68,10 @@ class InMemoryPostRepository implements PostRepository {
   final Map<String, Set<String>> _likesByPost = {}; // postId -> userIds
 
   @override
-  List<Post> getAll() => List.unmodifiable(_posts);
+  Future<List<Post>> getAll() async => List.unmodifiable(_posts);
 
   @override
-  Post create({
+  Future<Post> create({
     required String author,
     required String title,
     required String content,
@@ -123,12 +123,11 @@ class InMemoryPostRepository implements PostRepository {
       );
     }
     _posts.insert(0, post);
-    return post;
+    return Future.value(post);
   }
 
   @override
-  @override
-  bool like(String postId, String userId) {
+  Future<bool> like(String postId, String userId) async {
     final index = _posts.indexWhere((p) => p.id == postId);
     if (index == -1) return false;
     final likedUsers = _likesByPost.putIfAbsent(postId, () => HashSet());
@@ -140,7 +139,7 @@ class InMemoryPostRepository implements PostRepository {
   }
 
   @override
-  bool hasUserLiked(String postId, String userId) {
+  Future<bool> hasUserLiked(String postId, String userId) async {
     final users = _likesByPost[postId];
     if (users == null) return false;
     return users.contains(userId);
