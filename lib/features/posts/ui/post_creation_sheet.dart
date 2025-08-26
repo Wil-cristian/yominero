@@ -87,7 +87,7 @@ class _PostCreationSheetState extends State<PostCreationSheet> {
         .toList();
     setState(() => _submitting = true);
     try {
-  final post = await widget.create(
+      final post = await widget.create(
         title: title,
         content: content,
         type: _type,

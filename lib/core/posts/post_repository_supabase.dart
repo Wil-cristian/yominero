@@ -29,6 +29,10 @@ class PostRepositorySupabase implements PostRepository {
     // Prefer the authenticated user's id when available (RLS expects auth.uid())
     final authUserId = _client.auth.currentUser?.id;
     final authorId = authUserId ?? author;
+    if (authorId == null) {
+      // If no author could be determined, reject early to avoid DB errors
+      throw Exception('Author id required to create post');
+    }
 
     final row = {
       'author_id': authorId,
@@ -50,39 +54,57 @@ class PostRepositorySupabase implements PostRepository {
       'created_at': now.toIso8601String(),
     };
 
-    final res = await _client.from('posts').insert(row).select().single();
+    final dynamic res = await _client.from('posts').insert(row).select();
     if (res == null) {
       throw Exception('Failed to create post');
     }
-    return _mapRowToPost(res as Map<String, dynamic>);
+    // Supabase may return a List of rows or a Map with 'data'
+    dynamic out = res;
+    if (res is Map && res.containsKey('data')) {
+      out = res['data'];
+    }
+    final rowMap = (out is List && out.isNotEmpty) ? out.first : out;
+    if (rowMap == null) throw Exception('Failed to create post');
+    return _mapRowToPost(rowMap as Map<String, dynamic>);
   }
 
   @override
   Future<List<Post>> getAll() async {
-    final res = await _client
+    final dynamic res = await _client
         .from('posts')
         .select('*')
         .order('created_at', ascending: false);
     if (res == null) return [];
-    final list = (res as List).cast<Map<String, dynamic>>();
+    dynamic out = res;
+    if (res is Map) {
+      final Map m = res;
+      if (m.containsKey('data')) out = m['data'];
+    }
+    final items = (out is List) ? out : <dynamic>[];
+    final list = items.cast<Map<String, dynamic>>();
     return list.map(_mapRowToPost).toList();
   }
 
   @override
   Future<bool> like(String postId, [String? userId]) async {
     // Attempt to insert a like; if conflict (already liked) return false.
-  final authUserId = _client.auth.currentUser?.id;
-  final uid = userId ?? authUserId;
+    final authUserId = _client.auth.currentUser?.id;
+    final uid = userId ?? authUserId;
     if (uid == null) return false;
     final row = {
       'post_id': postId,
       'user_id': uid,
       'created_at': DateTime.now().toUtc().toIso8601String()
     };
-    final res = await _client.from('post_likes').insert(row).select();
-    // Supabase will return inserted rows; if empty assume failure
-    if (res == null || (res as List).isEmpty) return false;
-    return true;
+    final dynamic res = await _client.from('post_likes').insert(row).select();
+    if (res == null) return false;
+    dynamic out = res;
+    if (res is Map) {
+      final Map m = res;
+      if (m.containsKey('data')) out = m['data'];
+    }
+    if (out is List && out.isNotEmpty) return true;
+    return false;
   }
 
   @override

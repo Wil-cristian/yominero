@@ -14,10 +14,13 @@ class ProductRepositorySupabase implements ProductRepository {
   @override
   Future<List<Product>> getAll() async {
     try {
-      final res = await _client.from('products').select();
-      final dynamic raw =
-          res is Map && res.containsKey('data') ? res['data'] : res;
-      final data = raw as List<dynamic>?;
+      final dynamic res = await _client.from('products').select();
+      List<dynamic>? data;
+      if (res is List) {
+        data = res.cast<dynamic>();
+      } else if (res is Map && res['data'] is List) {
+        data = (res['data'] as List).cast<dynamic>();
+      }
       if (data == null) return [];
       final list =
           data.map((e) => mapRowToProduct(e as Map<String, dynamic>)).toList();
@@ -39,10 +42,14 @@ class ProductRepositorySupabase implements ProductRepository {
   @override
   Future<Product?> getById(String id) async {
     try {
-      final res = await _client.from('products').select().eq('id', id).limit(1);
-      final dynamic raw =
-          res is Map && res.containsKey('data') ? res['data'] : res;
-      final data = raw as List<dynamic>?;
+      final dynamic res =
+          await _client.from('products').select().eq('id', id).limit(1);
+      List<dynamic>? data;
+      if (res is List) {
+        data = res.cast<dynamic>();
+      } else if (res is Map && res['data'] is List) {
+        data = (res['data'] as List).cast<dynamic>();
+      }
       if (data == null || data.isEmpty) return null;
       return mapRowToProduct(data.first as Map<String, dynamic>);
     } catch (e) {

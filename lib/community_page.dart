@@ -139,12 +139,15 @@ class _CommunityPageState extends State<CommunityPage> {
     }
     final applied = await _repo.like(post.id, user.id);
     if (!applied) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ya le diste like a este post.')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ya le diste like a este post.')),
+        );
+      }
       return;
     }
     // optimistically update local state
+    if (!mounted) return;
     setState(() {
       final current = _posts[idx];
       _posts[idx] = current.copyWith(likes: current.likes + 1);
@@ -168,9 +171,9 @@ class _CommunityPageState extends State<CommunityPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) => PostCreationSheet(
-          authorName: user.name,
-          create: ({
-            String? author,
+        authorName: user.name,
+        create: ({
+          String? author,
           required String title,
           required String content,
           PostType type = PostType.community,
@@ -188,7 +191,7 @@ class _CommunityPageState extends State<CommunityPage> {
           String? availability,
         }) async {
           return _repo.create(
-              author: author,
+            author: author,
             title: title,
             content: content,
             type: type,
@@ -212,7 +215,8 @@ class _CommunityPageState extends State<CommunityPage> {
           final u = AuthService.instance.currentUser;
           if (u != null) SuggestionCache.instance.invalidateUser(u.id);
           await _loadPosts();
-          if (mounted) setState(() {});
+          if (!mounted) return;
+          setState(() {});
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Publicado: ${post.title}')),
           );
