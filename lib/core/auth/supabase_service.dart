@@ -14,10 +14,16 @@ class SupabaseService {
       throw Exception('SUPABASE_URL and SUPABASE_ANON_KEY must be set in .env');
     }
 
-    await Supabase.initialize(
-      url: url,
-      anonKey: anonKey,
-    );
+    // Initialize with a built-in timeout to avoid long blocking during app start.
+    try {
+      await Supabase.initialize(
+        url: url,
+        anonKey: anonKey,
+      ).timeout(const Duration(seconds: 8));
+    } on Exception {
+      // rethrow so callers can decide how to proceed
+      rethrow;
+    }
 
     client = Supabase.instance.client;
   }

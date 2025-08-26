@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/routing/app_router.dart';
@@ -18,20 +19,27 @@ Future<void> main() async {
   await dotenv.load();
   setupLocator();
 
+  // Initialize Supabase with a timeout so the app doesn't block on slow networks
+  bool supabaseReady = false;
   try {
-    await SupabaseService.instance.init();
+    await SupabaseService.instance
+        .init()
+        .timeout(const Duration(seconds: 10));
+    supabaseReady = true;
+  } on TimeoutException catch (_) {
+    // ignore: avoid_print
+    print('Supabase initialization timed out. Continuing in offline mode.');
   } catch (e) {
-    // Initialization failed; continue but log the error.
-    // In production you may want to halt the app or show an error screen.
     // ignore: avoid_print
     print('Supabase init error: $e');
   }
 
-  runApp(const MyApp());
+  runApp(MyApp(supabaseReady: supabaseReady));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool supabaseReady;
+  const MyApp({super.key, required this.supabaseReady});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +47,28 @@ class MyApp extends StatelessWidget {
       title: 'YoMinero App',
       theme: yoMineroTheme,
       onGenerateRoute: onGenerateRoute,
-      initialRoute: AppRoutes.home,
+      initialRoute: supabaseReady ? AppRoutes.home : AppRoutes.home,
+      home: supabaseReady ? const MainApp() : const OfflineSplash(),
+    );
+  }
+}
+
+class OfflineSplash extends StatelessWidget {
+  const OfflineSplash({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            FlutterLogo(size: 96),
+            SizedBox(height: 16),
+            Text('No se pudo conectar a Supabase. Modo limitado.'),
+          ],
+        ),
+      ),
     );
   }
 }

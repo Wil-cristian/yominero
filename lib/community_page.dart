@@ -35,7 +35,7 @@ class _CommunityPageState extends State<CommunityPage> {
 
   Future<void> _loadPosts() async {
     try {
-      final posts = await _repo.getAll();
+  final posts = await _repo.getAll().timeout(const Duration(seconds: 8), onTimeout: () => <Post>[]);
       _posts = posts;
       final user = AuthService.instance.currentUser;
       _likesCache.clear();

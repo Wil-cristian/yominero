@@ -49,15 +49,18 @@ class _ProductsPageState extends State<ProductsPage> {
     _isLoadingRemote = true;
     () async {
       try {
-        final list = await _repo.getAll();
+        final list = await _repo.getAll().timeout(const Duration(seconds: 8), onTimeout: () => <Product>[]);
+        if (!mounted) return;
         setState(() {
           _allProducts = list;
         });
       } catch (e) {
+        if (!mounted) return;
         setState(() {
           _remoteError = e.toString();
         });
       } finally {
+        if (!mounted) return;
         setState(() {
           _isLoadingRemote = false;
         });
@@ -97,14 +100,14 @@ class _ProductsPageState extends State<ProductsPage> {
                     ],
                   ),
                 ),
-                child: SafeArea(
+                child: const SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text(
+                        Text(
                           'Marketplace',
                           style: TextStyle(
                             fontSize: 28,
@@ -112,8 +115,8 @@ class _ProductsPageState extends State<ProductsPage> {
                             color: AppColors.textPrimary,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        const Text(
+                        SizedBox(height: 4),
+                        Text(
                           'Productos para minería',
                           style: TextStyle(
                             fontSize: 16,

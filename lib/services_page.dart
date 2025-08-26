@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yominero/shared/models/post.dart';
 import 'package:yominero/shared/models/service.dart';
 import 'core/theme/colors.dart';
 import 'core/di/locator.dart';
@@ -32,18 +33,27 @@ class _ServicesPageState extends State<ServicesPage>
     _services = [];
     _tabController = TabController(length: 3, vsync: this);
     _computeMatches();
-    _loadServices();
+  _loadServices();
   }
 
   Future<void> _loadServices() async {
     setState(() => _servicesLoading = true);
-    _services = await _repo.getAll();
-    setState(() => _servicesLoading = false);
+    try {
+      final res = await _repo.getAll().timeout(const Duration(seconds: 8), onTimeout: () => <Service>[]);
+      if (!mounted) return;
+      setState(() => _services = res);
+    } catch (e) {
+      if (!mounted) return;
+      // keep empty list and stop loading
+    } finally {
+      if (!mounted) return;
+      setState(() => _servicesLoading = false);
+    }
   }
 
   Future<void> _computeMatches() async {
     final user = AuthService.instance.currentUser;
-    final posts = await _postRepo.getAll();
+  final posts = await _postRepo.getAll().timeout(const Duration(seconds: 8), onTimeout: () => <Post>[]);
     if (user != null) {
       setState(() {
         _suggestedRequests = MatchEngine.requestsForUser(user, posts);

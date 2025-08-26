@@ -28,12 +28,18 @@ class _GroupsPageState extends State<GroupsPage> {
   }
 
   Future<void> _load() async {
-    final data = await _repo.getAll();
-    if (!mounted) return;
-    // Compute suggestions in same frame to avoid extra setState + async context warning.
-    _groups = data;
-    _computeSuggestions();
-    if (mounted) setState(() {});
+    try {
+      final data = await _repo.getAll().timeout(const Duration(seconds: 8), onTimeout: () => <Group>[]);
+      if (!mounted) return;
+      // Compute suggestions in same frame to avoid extra setState + async context warning.
+      _groups = data;
+      _computeSuggestions();
+      if (mounted) setState(() {});
+    } catch (_) {
+      if (!mounted) return;
+      // keep previous groups and avoid crash
+      if (mounted) setState(() {});
+    }
   }
 
   List<Group> get _filtered => _groups
