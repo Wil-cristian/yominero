@@ -8,6 +8,8 @@ import 'features/posts/domain/post_repository.dart';
 import 'features/posts/ui/post_creation_sheet.dart';
 import 'core/matching/match_engine.dart';
 import 'core/matching/suggestion_cache.dart';
+import 'core/theme/animations.dart';
+import 'core/theme/glass_card.dart';
 
 class CommunityPage extends StatefulWidget {
   const CommunityPage({super.key});
@@ -350,11 +352,15 @@ class _CommunityPageState extends State<CommunityPage> {
                     final user = AuthService.instance.currentUser;
                     final liked =
                         user != null && (_likesCache[post.id] ?? false);
-                    return _PostCard(
-                      post: post,
-                      liked: liked,
-                      likeTap: () => _likePost(post),
-                      score: _suggestionScores[post.id],
+                    return FadeInSlide(
+                      duration: AppDurations.normal,
+                      delay: Duration(milliseconds: 50 * (index - cursor)),
+                      child: _PostCard(
+                        post: post,
+                        liked: liked,
+                        likeTap: () => _likePost(post),
+                        score: _suggestionScores[post.id],
+                      ),
                     );
                   }
                   cursor += postsOfDay.length;
@@ -387,26 +393,24 @@ class _CommunityPageState extends State<CommunityPage> {
             itemBuilder: (context, i) {
               final mr = _suggestions[i];
               final p = mr.post;
-              return GestureDetector(
-                onTap: () => Navigator.of(context).pushNamed(
-                  AppRoutes.postDetail,
-                  arguments: p,
-                ),
-                child: Container(
-                  width: 240,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.06),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+              return ScaleFadeIn(
+                duration: AppDurations.normal,
+                delay: Duration(milliseconds: 80 * i),
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pushNamed(
+                    AppRoutes.postDetail,
+                    arguments: p,
                   ),
-                  child: Column(
+                  child: Container(
+                    width: 240,
+                    child: PremiumCard(
+                      padding: const EdgeInsets.all(16),
+                      borderRadius: 16,
+                      gradientColors: [
+                        Colors.white,
+                        AppColors.primaryContainer.withOpacity(0.1),
+                      ],
+                      child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
@@ -473,6 +477,8 @@ class _CommunityPageState extends State<CommunityPage> {
                           }).toList(),
                         ),
                     ],
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -512,26 +518,15 @@ class _PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return PremiumCard(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
+      borderRadius: 16,
       onTap: () => Navigator.of(context).pushNamed(
         AppRoutes.postDetail,
         arguments: post,
       ),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -671,7 +666,6 @@ class _PostCard extends StatelessWidget {
               ],
             ),
           ],
-        ),
       ),
     );
   }
