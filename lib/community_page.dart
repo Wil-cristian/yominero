@@ -401,14 +401,14 @@ class _CommunityPageState extends State<CommunityPage> {
                     AppRoutes.postDetail,
                     arguments: p,
                   ),
-                  child: Container(
+                  child: SizedBox(
                     width: 240,
                     child: PremiumCard(
                       padding: const EdgeInsets.all(16),
                       borderRadius: 16,
                       gradientColors: [
                         Colors.white,
-                        AppColors.primaryContainer.withOpacity(0.1),
+                        AppColors.primaryContainer.withValues(alpha: 0.1),
                       ],
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

@@ -36,12 +36,12 @@ class GlassCard extends StatelessWidget {
         boxShadow: shadows ??
             [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
               BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: Colors.black.withValues(alpha: 0.03),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -54,11 +54,11 @@ class GlassCard extends StatelessWidget {
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
-              color: (color ?? AppColors.surface).withOpacity(opacity),
+              color: (color ?? AppColors.surface).withValues(alpha: opacity),
               borderRadius: BorderRadius.circular(borderRadius),
               border: border ??
                   Border.all(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     width: 1.5,
                   ),
             ),
@@ -97,12 +97,12 @@ class PremiumCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.08),
+            color: AppColors.primary.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -123,12 +123,12 @@ class PremiumCard extends StatelessWidget {
                 colors: gradientColors ??
                     [
                       AppColors.surface,
-                      AppColors.surface.withOpacity(0.95),
+                      AppColors.surface.withValues(alpha: 0.95),
                     ],
               ),
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(
-                color: AppColors.outline.withOpacity(0.3),
+                color: AppColors.outline.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),

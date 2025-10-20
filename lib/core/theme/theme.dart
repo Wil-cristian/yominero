@@ -31,7 +31,7 @@ ThemeData _buildTheme() {
       backgroundColor: AppColors.primary,
       foregroundColor: AppColors.white,
       elevation: 0,
-      shadowColor: AppColors.primary.withOpacity(0.3),
+      shadowColor: AppColors.primary.withValues(alpha: 0.3),
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
@@ -60,7 +60,7 @@ ThemeData _buildTheme() {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         elevation: 2,
-        shadowColor: AppColors.primary.withOpacity(0.4),
+        shadowColor: AppColors.primary.withValues(alpha: 0.4),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
@@ -94,7 +94,7 @@ ThemeData _buildTheme() {
       color: AppColors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 0,
-      shadowColor: AppColors.primary.withOpacity(0.1),
+      shadowColor: AppColors.primary.withValues(alpha: 0.1),
       margin: const EdgeInsets.all(8),
     ),
     dividerColor: AppColors.outline,
