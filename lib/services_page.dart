@@ -33,27 +33,32 @@ class _ServicesPageState extends State<ServicesPage>
     _services = [];
     _tabController = TabController(length: 3, vsync: this);
     _computeMatches();
-  _loadServices();
+    _loadServices();
   }
 
   Future<void> _loadServices() async {
     setState(() => _servicesLoading = true);
     try {
-      final res = await _repo.getAll().timeout(const Duration(seconds: 8), onTimeout: () => <Service>[]);
+      final res = await _repo
+          .getAll()
+          .timeout(const Duration(seconds: 8), onTimeout: () => <Service>[]);
       if (!mounted) return;
       setState(() => _services = res);
     } catch (e) {
       if (!mounted) return;
       // keep empty list and stop loading
     } finally {
-      if (!mounted) return;
-      setState(() => _servicesLoading = false);
+      if (mounted) {
+        setState(() => _servicesLoading = false);
+      }
     }
   }
 
   Future<void> _computeMatches() async {
     final user = AuthService.instance.currentUser;
-  final posts = await _postRepo.getAll().timeout(const Duration(seconds: 8), onTimeout: () => <Post>[]);
+    final posts = await _postRepo
+        .getAll()
+        .timeout(const Duration(seconds: 8), onTimeout: () => <Post>[]);
     if (user != null) {
       setState(() {
         _suggestedRequests = MatchEngine.requestsForUser(user, posts);

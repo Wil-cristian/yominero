@@ -11,9 +11,9 @@ void main() {
         username: 'u1',
         email: 'u1@test',
         name: 'U1',
-        interests: const ['geologia', 'datos'],
-        watchKeywords: const ['exploracion'],
-        servicesOffered: const [],
+        interests: ['geologia', 'datos'],
+        watchKeywords: ['exploracion'],
+        servicesOffered: [],
       );
       final groups = [
         Group(

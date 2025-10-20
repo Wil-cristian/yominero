@@ -44,7 +44,7 @@ class MatchEngine {
 
   /// Suggestions for provider: focus on ServiceRequest + community posts relevant.
   static List<MatchResult> requestsForUser(User user, List<Post> posts,
-      {int threshold = 35}) {
+    {int threshold = 30}) {
     final tagPool = user.servicesOffered.expand((s) => s.tags).toSet();
     final catPool = user.servicesOffered.map((s) => s.category).toSet();
     // Boost pools with followed tags/categories
@@ -129,9 +129,17 @@ class MatchEngine {
 
   static List<Group> groupSuggestionsForUser(User user, List<Group> groups,
       {int threshold = 30, int limit = 6}) {
+    final userTagPool = <String>{
+      ...user.interests,
+      ...user.watchKeywords,
+      ...user.servicesOffered.expand((s) => s.tags),
+    };
     final scored = <_ScoredGroup>[];
     for (final g in groups) {
       if (g.memberIds.contains(user.id)) continue;
+      // Require at least some topical overlap to be suggested
+      final hasOverlap = g.tags.intersection(userTagPool).isNotEmpty;
+      if (!hasOverlap) continue;
       final s = computeGroupScore(group: g, user: user);
       if (s >= threshold) scored.add(_ScoredGroup(g, s));
     }

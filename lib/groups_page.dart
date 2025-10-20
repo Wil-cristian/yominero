@@ -29,7 +29,9 @@ class _GroupsPageState extends State<GroupsPage> {
 
   Future<void> _load() async {
     try {
-      final data = await _repo.getAll().timeout(const Duration(seconds: 8), onTimeout: () => <Group>[]);
+      final data = await _repo
+          .getAll()
+          .timeout(const Duration(seconds: 8), onTimeout: () => <Group>[]);
       if (!mounted) return;
       // Compute suggestions in same frame to avoid extra setState + async context warning.
       _groups = data;
@@ -133,14 +135,13 @@ class _GroupsPageState extends State<GroupsPage> {
                     }
                     final g = await _repo.create(
                         name: name, description: desc, tags: tags);
-                    if (mounted) {
-                      setState(() => _groups.insert(0, g));
-                      _computeSuggestions();
-                      Navigator.pop(ctx);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Grupo "$name" creado')),
-                      );
-                    }
+                    if (!mounted || !ctx.mounted) return;
+                    setState(() => _groups.insert(0, g));
+                    _computeSuggestions();
+                    Navigator.of(ctx).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Grupo "$name" creado')),
+                    );
                   },
                   icon: const Icon(Icons.send),
                   label: const Text('Crear grupo'),

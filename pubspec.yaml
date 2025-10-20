@@ -10,14 +10,8 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  sqflite: ^2.3.0
-  path_provider: ^2.0.14
-  path: ^1.8.3
   get_it: ^7.6.0
-  flutter_dotenv: ^5.0.2
-  supabase_flutter: ^2.9.1
-  sign_in_with_apple: ^7.0.1
-  webview_flutter: ^4.13.0
+  
 
 dev_dependencies:
   flutter_test:

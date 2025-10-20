@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 8),
-            Icon(Icons.lock_outline, size: 64, color: AppColors.primary),
+            const Icon(Icons.lock_outline, size: 64, color: AppColors.primary),
             const SizedBox(height: 16),
             Text(
               'Bienvenido',

@@ -31,7 +31,7 @@ void main() {
       username: 'user1',
       name: 'User 1',
       email: 'u1@test',
-      servicesOffered: const [
+      servicesOffered: [
         ServiceOffering(
           name: 'Mantenimiento',
           category: 'Maquinaria',
@@ -39,8 +39,8 @@ void main() {
           pricing: PricingRange(from: 10, to: 20, unit: 'USD'),
         ),
       ],
-      interests: const ['drone'],
-      watchKeywords: const ['mapeo'],
+      interests: ['drone'],
+      watchKeywords: ['mapeo'],
     );
 
     final posts = [

@@ -9,8 +9,8 @@ void main() {
     setupLocator();
   });
 
-  Future<void> _pump(WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: const GroupsPage()));
+  Future<void> pump(WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(home: GroupsPage()));
     await tester.pumpAndSettle();
   }
 
@@ -18,7 +18,7 @@ void main() {
       'Shows suggestions section when user logged and suggestions exist',
       (tester) async {
     await AuthService.instance.login(email: 'user@test', password: 'x');
-    await _pump(tester);
+    await pump(tester);
     // May or may not show depending on scoring; relax to existence of heading if appears
     await tester.pump(const Duration(milliseconds: 100));
     // Not asserting mandatory presence to avoid flakiness; just ensure no crash
@@ -28,7 +28,7 @@ void main() {
   testWidgets('Create group bottom sheet validates empty fields',
       (tester) async {
     await AuthService.instance.login(email: 'user2@test', password: 'x');
-    await _pump(tester);
+    await pump(tester);
     await tester.tap(find.byTooltip('Nuevo grupo'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Crear grupo'));

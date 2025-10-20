@@ -1,10 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/routing/app_router.dart';
 import 'core/di/locator.dart';
 import 'core/auth/auth_service.dart';
-import 'core/auth/supabase_service.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/colors.dart';
 import 'shared/models/user.dart';
@@ -14,32 +11,14 @@ import 'services_page.dart';
 import 'profile_page.dart';
 import 'groups_page.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
   setupLocator();
-
-  // Initialize Supabase with a timeout so the app doesn't block on slow networks
-  bool supabaseReady = false;
-  try {
-    await SupabaseService.instance
-        .init()
-        .timeout(const Duration(seconds: 10));
-    supabaseReady = true;
-  } on TimeoutException catch (_) {
-    // ignore: avoid_print
-    print('Supabase initialization timed out. Continuing in offline mode.');
-  } catch (e) {
-    // ignore: avoid_print
-    print('Supabase init error: $e');
-  }
-
-  runApp(MyApp(supabaseReady: supabaseReady));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool supabaseReady;
-  const MyApp({super.key, required this.supabaseReady});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,28 +26,7 @@ class MyApp extends StatelessWidget {
       title: 'YoMinero App',
       theme: yoMineroTheme,
       onGenerateRoute: onGenerateRoute,
-      initialRoute: supabaseReady ? AppRoutes.home : AppRoutes.home,
-      home: supabaseReady ? const MainApp() : const OfflineSplash(),
-    );
-  }
-}
-
-class OfflineSplash extends StatelessWidget {
-  const OfflineSplash({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            FlutterLogo(size: 96),
-            SizedBox(height: 16),
-            Text('No se pudo conectar a Supabase. Modo limitado.'),
-          ],
-        ),
-      ),
+      home: const MainApp(),
     );
   }
 }

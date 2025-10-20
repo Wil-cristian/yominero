@@ -10,9 +10,9 @@ void main() {
         username: 'u',
         email: 'u@test',
         name: 'U',
-        interests: const ['x'],
-        watchKeywords: const [],
-        servicesOffered: const []);
+        interests: ['x'],
+        watchKeywords: [],
+        servicesOffered: []);
     final newer = DateTime.now();
     final older = DateTime.now().subtract(const Duration(days: 40));
     final g1 = Group(

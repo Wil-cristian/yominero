@@ -10,9 +10,9 @@ void main() {
       username: 'u',
       email: 'u@test',
       name: 'User',
-      interests: const ['a', 'b'],
-      watchKeywords: const ['c'],
-      servicesOffered: const [],
+      interests: ['a', 'b'],
+      watchKeywords: ['c'],
+      servicesOffered: [],
     );
 
     Group g({Set<String>? tags, int members = 0, int daysAgo = 1}) => Group(

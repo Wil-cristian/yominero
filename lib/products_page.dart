@@ -49,7 +49,9 @@ class _ProductsPageState extends State<ProductsPage> {
     _isLoadingRemote = true;
     () async {
       try {
-        final list = await _repo.getAll().timeout(const Duration(seconds: 8), onTimeout: () => <Product>[]);
+        final list = await _repo
+            .getAll()
+            .timeout(const Duration(seconds: 8), onTimeout: () => <Product>[]);
         if (!mounted) return;
         setState(() {
           _allProducts = list;
@@ -60,10 +62,11 @@ class _ProductsPageState extends State<ProductsPage> {
           _remoteError = e.toString();
         });
       } finally {
-        if (!mounted) return;
-        setState(() {
-          _isLoadingRemote = false;
-        });
+        if (mounted) {
+          setState(() {
+            _isLoadingRemote = false;
+          });
+        }
       }
     }();
   }
