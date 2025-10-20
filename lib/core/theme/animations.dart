@@ -249,6 +249,11 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
+        final shimmerPosition = _controller.value;
+        final start = (shimmerPosition - 0.3).clamp(0.0, 1.0);
+        final center = shimmerPosition.clamp(0.0, 1.0);
+        final end = (shimmerPosition + 0.3).clamp(0.0, 1.0);
+        
         return ShaderMask(
           shaderCallback: (bounds) {
             return LinearGradient(
@@ -259,11 +264,7 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
                 widget.highlightColor,
                 widget.baseColor,
               ],
-              stops: [
-                _controller.value - 0.3,
-                _controller.value,
-                _controller.value + 0.3,
-              ],
+              stops: [start, center, end],
             ).createShader(bounds);
           },
           child: child,
