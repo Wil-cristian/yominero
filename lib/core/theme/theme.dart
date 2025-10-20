@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'colors.dart';
 
 final ThemeData yoMineroTheme = _buildTheme();
@@ -26,10 +27,21 @@ ThemeData _buildTheme() {
     colorScheme: scheme,
     scaffoldBackgroundColor: AppColors.background,
     primaryColor: AppColors.primary,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: AppColors.primary,
       foregroundColor: AppColors.white,
       elevation: 0,
+      shadowColor: AppColors.primary.withOpacity(0.3),
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      titleTextStyle: const TextStyle(
+        color: AppColors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.15,
+      ),
     ),
     textTheme: base.textTheme.copyWith(
       bodyLarge:
@@ -47,6 +59,8 @@ ThemeData _buildTheme() {
         foregroundColor: AppColors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        elevation: 2,
+        shadowColor: AppColors.primary.withOpacity(0.4),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
@@ -79,7 +93,8 @@ ThemeData _buildTheme() {
     cardTheme: CardThemeData(
       color: AppColors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 1,
+      elevation: 0,
+      shadowColor: AppColors.primary.withOpacity(0.1),
       margin: const EdgeInsets.all(8),
     ),
     dividerColor: AppColors.outline,
