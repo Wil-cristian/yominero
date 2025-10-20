@@ -33,3 +33,8 @@ waitForPort = 5000
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["python3", "-m", "http.server", "5000", "--bind", "0.0.0.0", "--directory", "build/web"]
+build = ["bash", "-c", "export PATH=\"$HOME/flutter/bin:$PATH\" && flutter build web --release"]
