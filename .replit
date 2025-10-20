@@ -1,0 +1,7 @@
+modules = ["web", "cpp-clang14", "c-clang14"]
+[agent]
+expertMode = true
+
+[nix]
+channel = "stable-25_05"
+packages = ["unzip"]
