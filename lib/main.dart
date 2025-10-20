@@ -4,6 +4,7 @@ import 'core/di/locator.dart';
 import 'core/auth/auth_service.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/colors.dart';
+import 'core/theme/animations.dart';
 import 'shared/models/user.dart';
 import 'community_page.dart';
 import 'products_page.dart';
@@ -69,8 +70,43 @@ class _MainAppState extends State<MainApp> {
       ProfilePage(user: user, posts: const []),
     ];
     return Scaffold(
-      body: pages[_selectedIndex],
-      bottomNavigationBar: Theme(
+      body: AnimatedSwitcher(
+        duration: AppDurations.pageTransition,
+        switchInCurve: AppCurves.premiumEntry,
+        switchOutCurve: AppCurves.smoothExit,
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.02, 0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            ),
+          );
+        },
+        child: KeyedSubtree(
+          key: ValueKey<int>(_selectedIndex),
+          child: pages[_selectedIndex],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, -4),
+            ),
+            BoxShadow(
+              color: AppColors.primary.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Theme(
         data: Theme.of(context).copyWith(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
@@ -106,6 +142,8 @@ class _MainAppState extends State<MainApp> {
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
+          elevation: 0,
+        ),
         ),
       ),
     );
