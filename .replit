@@ -1,4 +1,4 @@
-modules = ["web", "cpp-clang14", "c-clang14"]
+modules = ["web", "cpp-clang14", "c-clang14", "python-3.11"]
 [agent]
 expertMode = true
 
@@ -22,18 +22,14 @@ args = "Flutter Web App"
 name = "Flutter Web App"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "export PATH=\"$HOME/flutter/bin:$PATH\" && flutter run -d web-server --web-hostname 0.0.0.0 --web-port 5000"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 -m http.server 5000 --bind 0.0.0.0 --directory build/web"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 38581
-externalPort = 3000
